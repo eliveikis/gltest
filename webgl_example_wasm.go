@@ -1,12 +1,18 @@
+// +build wasm
+
 package main
 
+
 import (
-	"github.com/gopherjs/gopherjs/js"
-	"github.com/gopherjs/webgl"
+	"github.com/gopherjs/gopherwasm/js"
+	"github.com/eliveikis/webgl"
 )
 
 func main() {
-	document := js.Global.Get("document")
+	document := js.Global().Get("document")
+
+	document.Call("getElementsByTagName", "body").Index(0).Set("innerHTML", "Hello, World!")
+
 	canvas := document.Call("createElement", "canvas")
 	document.Get("body").Call("appendChild", canvas)
 
@@ -15,7 +21,7 @@ func main() {
 
 	gl, err := webgl.NewContext(canvas, attrs)
 	if err != nil {
-		js.Global.Call("alert", "Error: "+err.Error())
+		js.Global().Call("alert", "Error: "+err.Error())
 	}
 
 	gl.ClearColor(0.8, 0.3, 0.01, 1)
